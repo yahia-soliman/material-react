@@ -3,6 +3,10 @@ import { useSwipeable } from 'react-swipeable';
 import PropTypes from 'prop-types';
 import './styles/carousel.css';
 
+
+import IconButton from '@mui/material/IconButton'
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 // const isEqual = require("react-fast-compare");
 
 export function Carousel(props) {
@@ -27,7 +31,7 @@ export function Carousel(props) {
       };
       locSlides.push(slideobject);
     });
-    if(props.slides.length === 2){
+    if (props.slides.length === 2) {
       props.slides.forEach((slide) => {
         const slideobject = {
           class: 'slider-single proactivede',
@@ -45,24 +49,25 @@ export function Carousel(props) {
         if (props.autoplay) {
           intervalRef.current = setTimeout(() => {
             nextRef.current.click();
-        }, props.interval);}
+          }, props.interval);
+        }
       }, 500);
     }
   }, [props.slides]);
-  useEffect(()=>{
-    if(slideCurrent === -1){
+  useEffect(() => {
+    if (slideCurrent === -1) {
       setTimeout(() => {
-        //slideRight();
+        slideRight();
       }, 500);
     }
-  },[slides,slideCurrent]);
+  }, [slides, slideCurrent]);
 
-  
+
   const slideRight = () => {
     let preactiveSlide;
     let proactiveSlide;
     let slideCurrentLoc = slideCurrent;
-    
+
     const activeClass = 'slider-single active';
     const slide = [...slides];
     if (slideTotal > 1) {
@@ -102,11 +107,11 @@ export function Carousel(props) {
         setTimeout(() => {
           if (document.getElementsByClassName('slider-single active').length > 0) {
             const height = document.getElementsByClassName('slider-single active')[0].clientHeight;
-            setHeight(`${height  }px`);
+            setHeight(`${height}px`);
           }
         }, 500);
       }
-      props.onSlideChange(slideCurrentLoc);
+      props.onSlideChange(slideCurrentLoc, 'R');
       if (props.autoplay) {
         clearTimeout(intervalRef.current);
         intervalRef.current = setTimeout(() => {
@@ -155,12 +160,12 @@ export function Carousel(props) {
       proactiveSlide.class = 'slider-single proactive';
       setSlides(slide);
       setSlideCurrent(slideCurrentLoc);
-      props.onSlideChange(slideCurrentLoc);
+      props.onSlideChange(slideCurrentLoc, 'L');
       if (document.getElementsByClassName('slider-single active').length > 0) {
         setTimeout(() => {
           if (document.getElementsByClassName('slider-single active').length > 0) {
             const height = document.getElementsByClassName('slider-single active')[0].clientHeight;
-            setHeight(`${height }px`);
+            setHeight(`${height}px`);
           }
         }, 500);
       }
@@ -179,32 +184,30 @@ export function Carousel(props) {
 
   return (
     <div className="react-3d-carousel" style={{ height }} {...handlers}>
-          {slides && slides.length > 0
-                && <div className="slider-container" >
+      {slides && slides.length > 0
+        && <div className="slider-container" >
 
-                  <div className="slider-content">
-                      {slides.map((slider, index) => (
-                                <div className={slider.class} key={index}>
-                                    <div className={sliderClass('left')} onClick={slideLeft}>
-                                        <div>
-                                            <i className="fa fa-arrow-left"></i>
-                                        </div>
-                                    </div>
-                                    <div className={sliderClass('right')} onClick={slideRight} ref={nextRef}>
-                                        <div >
-                                            <i className="fa fa-arrow-right"></i>
-                                        </div>
-                                    </div>
+          <div className="slider-content">
+            {slides.map((slider, index) => (
+              <div className={slider.class} key={index}>
+                <div className={sliderClass('left')} onClick={slideLeft}>
+                  <IconButton disableRipple sx={{ backgroundColor: 'white' }}><ChevronLeftIcon /></IconButton>
+                </div>
+                <div className={sliderClass('right')} onClick={slideRight} ref={nextRef}>
+                  <IconButton
+                    disableRipple sx={{ backgroundColor: 'white' }}
+                  > <ChevronRightIcon /> </IconButton>
+                </div>
 
-                                    <div className="slider-single-content">
-                                        {slider.element}
-                                    </div>
-                                </div>
-                      ))}
-                    </div>
+                <div className="slider-single-content">
+                  {slider.element}
+                </div>
+              </div>
+            ))}
+          </div>
 
-                </div>}
-        </div>
+        </div>}
+    </div>
   );
 }
 Carousel.propTypes = {
@@ -213,14 +216,14 @@ Carousel.propTypes = {
   interval: PropTypes.number,
   arrows: PropTypes.bool,
   arrowBorders: PropTypes.bool,
-  onSlideChange:PropTypes.func
+  onSlideChange: PropTypes.func
 };
 Carousel.defaultProps = {
   autoplay: false,
   interval: 3000,
   arrows: true,
   arrowBorders: true,
-  onSlideChange:function(){
+  onSlideChange: function () {
 
   }
 };
